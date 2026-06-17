@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玻璃森林题解</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../../">← Back to directory</a>
+    </div>
+    <h1 id="_1">玻璃森林题解</h1>
+<h2 id="_2">关键观察</h2>
+<p>若知道一段序列的：</p>
+<ul>
+<li>最左端颜色；</li>
+<li>最右端颜色；</li>
+<li>内部连续颜色段数量；</li>
+</ul>
+<p>就可以合并两段相邻序列。若左段右端颜色等于右段左端颜色，合并后段数需要减一。</p>
+<p>因此可以在线段树中维护这三个信息，再用树链剖分把树上路径拆成若干条重链区间。</p>
+<h2 id="_3">算法</h2>
+<p>对树做重链剖分，将每个点映射到 DFS 序位置。线段树的每个节点维护：</p>
+<ul>
+<li><code>lc</code>：区间按 DFS 序从左到右的第一个颜色；</li>
+<li><code>rc</code>：区间按 DFS 序从左到右的最后一个颜色；</li>
+<li><code>cnt</code>：区间颜色段数量。</li>
+</ul>
+<p>点修改就是线段树单点修改。</p>
+<p>路径询问时，路径方向很重要：</p>
+<ul>
+<li>从 <span class="arithmatex">\(u\)</span> 往上跳的重链区间，在 DFS 序里是从链顶到 <span class="arithmatex">\(u\)</span>，但路径顺序是从 <span class="arithmatex">\(u\)</span> 到链顶，所以要反转左右端颜色；</li>
+<li>从 <span class="arithmatex">\(v\)</span> 往上跳得到的区间，最终应接在答案右侧，因此需要按从链顶到 <span class="arithmatex">\(v\)</span> 的顺序拼到右半答案前面。</li>
+</ul>
+<p>最后同一条重链上的中间区间也按实际路径方向处理，再合并左右两部分。</p>
+<h2 id="_4">正确性说明</h2>
+<p>线段树节点信息足以描述一段颜色序列与相邻序列合并时会产生的影响。合并公式只在两段交界处可能改变段数，因此维护的信息完备。</p>
+<p>树链剖分将任意树上路径拆成若干个不交的链上连续区间。查询过程中分别维护从原始 <span class="arithmatex">\(u\)</span> 出发的左半路径和通向原始 <span class="arithmatex">\(v\)</span> 的右半路径，并在每段加入前调整方向，所以合并顺序与真实路径颜色序列一致。最终得到的段数就是题目所求。</p>
+<h2 id="_5">复杂度</h2>
+<p>预处理 <span class="arithmatex">\(O(n)\)</span>，每次修改 <span class="arithmatex">\(O(\log n)\)</span>，每次询问拆成 <span class="arithmatex">\(O(\log n)\)</span> 条链，每条链做一次线段树查询，因此复杂度为 <span class="arithmatex">\(O(\log^2 n)\)</span>。</p>
+<p>空间复杂度 <span class="arithmatex">\(O(n)\)</span>。</p>
+<h2 id="_6">易错点</h2>
+<ul>
+<li>路径查询不是无向集合查询，颜色段数依赖方向。</li>
+<li>合并两段时，只有交界颜色相同才减一。</li>
+<li>修改的是点颜色，不是边颜色。</li>
+</ul>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

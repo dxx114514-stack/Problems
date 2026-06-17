@@ -1,0 +1,4 @@
+# 忽略系统卷信息文件夹
+System Volume Information/
+# 忽略回收站文件夹
+$RECYCLE.BIN/

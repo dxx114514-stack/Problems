@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T604595 奖项查询</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../">← Back to directory</a>
+    </div>
+    <h1 id="t604595">T604595 奖项查询</h1>
+<h2 id="_1">题目描述</h2>
+<p>某比赛成绩新鲜出炉！该比赛分为一二三等奖和优秀奖（保证每个人都有奖），比赛官方即将公布每位选手的奖项。本场比赛规定排名在前<span class="arithmatex">\(10\%\)</span>的人可以获得一等奖，另外的前<span class="arithmatex">\(20\%\)</span>的人获得二等奖，剩下的前<span class="arithmatex">\(20\%\)</span>的人获得三等奖，其余<span class="arithmatex">\(50\%\)</span>人获得参与奖。\<br />
+换句话说，<span class="arithmatex">\(10\)</span>个人中，<span class="arithmatex">\(1\)</span>人获得一等奖，<span class="arithmatex">\(2\)</span>人获得二等奖，<span class="arithmatex">\(2\)</span>人获得三等奖，<span class="arithmatex">\(5\)</span>人获得优秀奖。\<br />
+可是，这个比赛排名有个规则漏洞：若两者分数一样，则排名学生编号从小到大排列。同时，这些学生一起要去查询奖项。由于任务繁重，比赛官方把这个规定分数线和告知奖项这个繁重的任务交给了你。</p>
+<h2 id="_2">输入格式</h2>
+<p>第一行一个正整数<span class="arithmatex">\(n\)</span>第二行到第<span class="arithmatex">\(n+1\)</span>行，每行一个数，第<span class="arithmatex">\(i\)</span>行的数表示学生编号为<span class="arithmatex">\(i\)</span>的学生在该比赛中的成绩。</p>
+<h2 id="_3">输出格式</h2>
+<p><span class="arithmatex">\(n\)</span>行，每行一个整数，第<span class="arithmatex">\(i\)</span>行表示学生编号为<span class="arithmatex">\(i\)</span>的学生的奖项，其中：\<br />
+一等奖表示为<code>First Prize</code>\<br />
+二等奖表示为<code>Second Prize</code>\<br />
+三等奖表示为<code>Third Prize</code>\<br />
+优秀奖表示为<code>Perfect Prize</code></p>
+<h2 id="1">输入输出样例 #1</h2>
+<h3 id="1_1">输入 #1</h3>
+<pre><code>10
+62
+72
+43
+28
+55
+85
+91
+62
+28
+89
+</code></pre>
+<h3 id="1_2">输出 #1</h3>
+<pre><code>Third Prize 
+Third Prize 
+Perfect Prize 
+Perfect Prize 
+Perfect Prize 
+Second Prize 
+First Prize 
+Perfect Prize 
+Perfect Prize 
+Second Prize 
+</code></pre>
+<h2 id="2">输入输出样例 #2</h2>
+<h3 id="2_1">输入 #2</h3>
+<pre><code>见下面附件in.in
+</code></pre>
+<h3 id="2_2">输出 #2</h3>
+<pre><code>见下面附件out.out
+</code></pre>
+<h2 id="_4">说明/提示</h2>
+<h3 id="_5">样例解释</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">名次</th>
+<th style="text-align: right;"><span class="arithmatex">\(1\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(2\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(3\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(4\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(5\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(6\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(7\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(8\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(9\)</span></th>
+<th style="text-align: right;"><span class="arithmatex">\(10\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">学生编号</td>
+<td style="text-align: right;"><span class="arithmatex">\(7\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(10\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(6\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(2\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(1\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(8\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(5\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(3\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(4\)</span></td>
+<td style="text-align: right;">$ 9$</td>
+</tr>
+<tr>
+<td style="text-align: right;">分数</td>
+<td style="text-align: right;"><span class="arithmatex">\(91\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(89\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(85\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(72\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(62\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(62\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(56\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(43\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(28\)</span></td>
+<td style="text-align: right;"><span class="arithmatex">\(28\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6"><strong>数据范围</strong></h3>
+<p>本题采用<span class="arithmatex">\(subtask\)</span>捆绑测试，你需要完成相应子任务的所有测试点才能拿到该测试点的分数。<br />
+|子任务编号  | 分值 | 数据范围 |<br />
+| -----------: | -----------: | -----------: |<br />
+| 子任务<span class="arithmatex">\(1\)</span> | <span class="arithmatex">\(30\)</span> | <span class="arithmatex">\(1\leqslant n \leqslant 10^2，1\leqslant a_i\leqslant 10^3\)</span> |<br />
+| 子任务<span class="arithmatex">\(2\)</span> | <span class="arithmatex">\(70\)</span> | <span class="arithmatex">\(1\leqslant n \leqslant 3×10^3，1\leqslant a_i\leqslant 3×10^4\)</span> |</p>
+<p>保证<span class="arithmatex">\(n\)</span>是<span class="arithmatex">\(10\)</span>的倍数</p>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T748841 预备——又是旅行算路费</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../">← Back to directory</a>
+    </div>
+    <h1 id="t748841">T748841 预备——又是旅行算路费</h1>
+<h2 id="_1">题目背景</h2>
+<blockquote>
+<p>此题为下一次欢乐赛可选题</p>
+</blockquote>
+<p>ZSC在SYC 的土地上旅行，他需要经过许许多多的高速公路，这些公路的路费令他头疼。庆幸的是，他拥有许多优惠券，可以在任何道路上使用，使用完成之后会使这一段的路费清零。他现在做旅行计划，请你帮他算一算到达终点需要多少钱。现在Jack觉得这题太简单了，想难倒小朋友们。于是，他将一个枢纽的描述改成了一个复杂的串。同时，他也改变了高速公路。不仅如此，ZSC的手机导航也坏掉了。请你帮帮他，让他到达景点。</p>
+<h2 id="_2">题目描述</h2>
+<p>给出一张高速公路路网图<strong>G</strong>。\<br />
+现在<span class="arithmatex">\(ZSC\)</span>想从<code>home</code>到达<code>attraction</code>。优惠券的数量有限，~~不然<em>SYC</em> 就没收入了~~。\<br />
+但是，如果高速公路的设计者很坏，<span class="arithmatex">\(ZSC\)</span>到不了景点，请你输出一个令人失望的<code>-1</code>。\<br />
+高速公路的设计者为了描述枢纽，设计了这样的一个结构：\<br />
+形如：<br />
+<code>!#!"name"="&lt;name&gt;" "id"=&lt;id&gt; "type"="&lt;type&gt;"!#!</code><br />
+- <code>&lt;name&gt;</code>表示枢纽名称，为一个含空格字符串<br />
+- <code>&lt;id&gt;</code>为一个0x开头的<strong>小写</strong>十六进制整数，其十进制形式<strong>应小于等于</strong><span class="arithmatex">\(2^{64}\)</span><br />
+- <code>&lt;type&gt;</code>为一个字符串，应为:<br />
+  - <code>open</code> 表示枢纽开放<br />
+  - <code>close</code>表示枢纽不开放，禁止驶入<br />
+  - 若一个节点类型为 <code>limit</code>，则所有与该节点<strong>直接相连</strong>的道路，均<strong>不允许</strong>使用优惠券。换句话说：一条道路只要<strong>任意一端</strong>是 limit 节点，这条道路就<strong>永远不能</strong>使用优惠券。</p>
+<p>高速公路的设计者十分粗心，他不小心把文件损坏了，添加了一大堆不合法的枢纽。请你判断，哪些枢纽描述合法。对于不合法的枢纽，你不能驶入，以免发生事故。</p>
+<p>高速公路的描述如下：\<br />
+<code>!@!"id"="&lt;id&gt;" "direction"="&lt;dir&gt;" "u"=&lt;u&gt; "v"=&lt;v&gt; "w"=&lt;w&gt; !@!</code><br />
+- <code>&lt;id&gt;</code>表示高速公路名称，为一个含空格字符串<br />
+- <code>&lt;direction&gt;</code>为一个字符串，仅有可能为:<br />
+  - <code>all</code> 表示高速公路可双向通行<br />
+  - <code>close</code>表示高速公路不开放，禁止驶入<br />
+  - <code>unidirectional</code>表示枢纽可以行驶，但是仅允许从<code>&lt;u&gt;</code>走向<code>&lt;v&gt;</code><br />
+- <code>&lt;u&gt;</code>为一个以<code>0x</code>开头<strong>大写</strong>十六进制整数，表示这条高速公路的起始点枢纽id，不一定为出现过的枢纽，如果没出现过，请忽略这条高速公路。<br />
+- <code>&lt;v&gt;</code>为一个以<code>0x</code>开头<strong>大写</strong>十六进制整数，表示这条高速公路的终止点枢纽id，不一定为出现过的枢纽，如果没出现过，请忽略这条高速公路。<br />
+- <code>&lt;w&gt;</code>为一个以0x开头的<strong>小写</strong>十六进制整数，表示走这条高速公路的花费。其十进制形式<strong>小于等于</strong><span class="arithmatex">\(2^{32}\)</span>。<br />
+:::info{open}<br />
+当<code>&lt;u&gt;</code>或<code>&lt;v&gt;</code>指向的枢纽不合法时，这条高速公路不可驶入。<br />
+:::</p>
+<hr />
+<p>接下来，你需要帮助ZSC输出从家到景区的花费及路径。</p>
+<h2 id="_3">输入格式</h2>
+<p>第一行输入一个整数 <span class="arithmatex">\(k\)</span> ,表示有 <span class="arithmatex">\(k\)</span> 张优惠券。\<br />
+接下来 <span class="arithmatex">\(T\)</span> 行，每行一个字符串，表示枢纽或高速公路。<br />
+:::info{open}<br />
+请使用较快的输入输出方式。<br />
+:::</p>
+<h2 id="_4">输出格式</h2>
+<p>第一行输出一个十进制整数：表示最小花费。\<br />
+接下来,请你依次输出ZSC会经过的枢纽名称，每行输出一个节点。</p>
+<h2 id="1">输入输出样例 #1</h2>
+<h3 id="1_1">输入 #1</h3>
+<pre><code>1
+!#!&quot;name&quot;=&quot;home&quot; &quot;id&quot;=0x1 &quot;type&quot;=&quot;open&quot;!#!
+!#!&quot;name&quot;=&quot;attraction&quot; &quot;id&quot;=0x2 &quot;type&quot;=&quot;open&quot;!#!
+!#!&quot;name&quot;=&quot;middle&quot; &quot;id&quot;=0x3 &quot;type&quot;=&quot;limit&quot;!#!
+!#!&quot;name&quot;=&quot;bad node&quot; &quot;id&quot;=0x4!#!
+!@!&quot;id&quot;=&quot;road1&quot; &quot;direction&quot;=&quot;all&quot; &quot;u&quot;=&quot;home&quot; &quot;v&quot;=&quot;middle&quot; &quot;w&quot;=0xa !@!
+!@!&quot;id&quot;=&quot;road2&quot; &quot;direction&quot;=&quot;unidirectional&quot; &quot;u&quot;=&quot;middle&quot; &quot;v&quot;=&quot;attraction&quot; &quot;w&quot;=0x64 !@!
+!@!&quot;id&quot;=&quot;road3&quot; &quot;direction&quot;=&quot;all&quot; &quot;u&quot;=&quot;home&quot; &quot;v&quot;=&quot;attraction&quot; &quot;w&quot;=0xc8 !@!
+!@!&quot;id&quot;=&quot;road4&quot; &quot;direction&quot;=&quot;close&quot; &quot;u&quot;=&quot;home&quot; &quot;v&quot;=&quot;bad node&quot; &quot;w&quot;=0x1 !@!
+</code></pre>
+<h3 id="1_2">输出 #1</h3>
+<pre><code>0
+home
+attraction
+
+</code></pre>
+<h2 id="_5">说明/提示</h2>
+<ul>
+<li>对于<span class="arithmatex">\(10\%\)</span>的数据，保证:</li>
+<li>$ k \leq 5 $</li>
+<li>对于全部数据，保证：</li>
+<li><span class="arithmatex">\(T \leq 6 \times 10^5\)</span></li>
+<li><span class="arithmatex">\(0 \leq k \leq 15\)</span></li>
+<li><span class="arithmatex">\(1 \leq w \leq {10}^6\)</span></li>
+<li>每条描述长度<span class="arithmatex">\(\leq 100\)</span></li>
+<li>节点数量<span class="arithmatex">\(\leq 2\times10^5\)</span></li>
+<li>枢纽描述和高速公路描述中的任意名称和<span class="arithmatex">\(id\)</span>不重复</li>
+<li>保证所有给出的<code>&lt;name&gt;</code>及<code>&lt;id&gt;</code>不会包含<code>"</code></li>
+</ul>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sol</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../../">← Back to directory</a>
+    </div>
+    <h2 id="quantuminterfere">题解：量子比特的相位干涉（QuantumInterfere）</h2>
+<h3 id="_1">核心观察</h3>
+<p>定义差分数组 <span class="arithmatex">\(d_i = |a_{i+1} - a_i|\)</span>（<span class="arithmatex">\(i=1,\dots,n-1\)</span>）。</p>
+<p>查询操作 <code>2 l r</code> 需要计算 <span class="arithmatex">\(\sum_{i=l}^{r-1} d_i\)</span>，即差分区间和。</p>
+<p>对于修改操作 <code>1 l r x</code>：<br />
+- 区间内部的相邻差值不变（因为所有元素都加了相同的值）。<br />
+- 只有端点处的差值可能改变：<br />
+  - <span class="arithmatex">\(d_{l-1} = |a_l - a_{l-1}|\)</span> 变为 <span class="arithmatex">\(|a_l+x - a_{l-1}|\)</span>（如果 <span class="arithmatex">\(l &gt; 1\)</span>）<br />
+  - <span class="arithmatex">\(d_r = |a_{r+1} - a_r|\)</span> 变为 <span class="arithmatex">\(|a_{r+1} - (a_r+x)|\)</span>（如果 <span class="arithmatex">\(r &lt; n\)</span>）</p>
+<p>因此，<strong>一次区间加最多影响 2 个位置的差分值</strong>。</p>
+<h3 id="_2">算法</h3>
+<p>使用<strong>树状数组（Fenwick Tree）</strong>维护差分区间和。</p>
+<ul>
+<li>初始时 <span class="arithmatex">\(O(n)\)</span> 计算所有 <span class="arithmatex">\(d_i\)</span> 并构建树状数组。</li>
+<li>操作 <code>1 l r x</code>：更新受影响的 <span class="arithmatex">\(d_{l-1}\)</span> 和 <span class="arithmatex">\(d_r\)</span>（如果存在），时间复杂度 <span class="arithmatex">\(O(\log n)\)</span>。</li>
+<li>操作 <code>2 l r</code>：查询区间 <span class="arithmatex">\([l, r-1]\)</span> 的和，时间复杂度 <span class="arithmatex">\(O(\log n)\)</span>。</li>
+</ul>
+<p><strong>关键实现细节</strong>：<br />
+- 维护原数组 <span class="arithmatex">\(a\)</span> 以计算新的差分值<br />
+- 每次修改后重新计算受影响位置的 <span class="arithmatex">\(d_i\)</span> 并更新树状数组</p>
+<h3 id="_3">复杂度</h3>
+<ul>
+<li>时间：<span class="arithmatex">\(O(n + m\log n)\)</span>。</li>
+<li>空间：<span class="arithmatex">\(O(n)\)</span>。</li>
+</ul>
+<h3 id="_4">注意事项</h3>
+<ul>
+<li>需要维护原数组 <span class="arithmatex">\(a\)</span> 以计算新的差分值。</li>
+<li>注意边界情况：<span class="arithmatex">\(l=1\)</span> 时没有 <span class="arithmatex">\(d_{l-1}\)</span>，<span class="arithmatex">\(r=n\)</span> 时没有 <span class="arithmatex">\(d_r\)</span>。</li>
+</ul>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

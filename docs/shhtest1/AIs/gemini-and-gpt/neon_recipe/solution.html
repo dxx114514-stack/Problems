@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>霓虹配方题解</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../../">← Back to directory</a>
+    </div>
+    <h1 id="_1">霓虹配方题解</h1>
+<h2 id="dp">DP 形式</h2>
+<p>设 <span class="arithmatex">\(dp_i\)</span> 表示从站点 <span class="arithmatex">\(1\)</span> 到站点 <span class="arithmatex">\(i\)</span> 的最小代价，<span class="arithmatex">\(dp_1=0\)</span>。有转移：</p>
+<div class="arithmatex">\[
+dp_j=\min_{i&lt;j,\ j\le r_i}\{dp_i+b_i+(x_j-x_i)^2+c_j\}.
+\]</div>
+<p>展开平方：</p>
+<div class="arithmatex">\[
+dp_i+b_i+x_i^2-2x_i x_j+x_j^2+c_j.
+\]</div>
+<p>对固定的 <span class="arithmatex">\(i\)</span>，它给后继 <span class="arithmatex">\(j\)</span> 贡献一条直线</p>
+<div class="arithmatex">\[
+y=(-2x_i)x + (dp_i+b_i+x_i^2),
+\]</div>
+<p>在 <span class="arithmatex">\(x=x_j\)</span> 处查询，再加上 <span class="arithmatex">\(x_j^2+c_j\)</span>。</p>
+<p>难点是这条直线只对下标区间 <span class="arithmatex">\([i+1,r_i]\)</span> 有效。</p>
+<h2 id="_2">算法</h2>
+<p>使用 CDQ 分治处理下标区间。</p>
+<p>设当前分治区间为 <span class="arithmatex">\([l,r]\)</span>，中点为 <span class="arithmatex">\(mid\)</span>：</p>
+<ol>
+<li>递归求出左半 <span class="arithmatex">\([l,mid]\)</span> 内所有 <span class="arithmatex">\(dp\)</span>；</li>
+<li>用左半所有已经可达的站点更新右半 <span class="arithmatex">\([mid+1,r]\)</span>；</li>
+<li>递归求右半。</li>
+</ol>
+<p>第 2 步中，左半站点 <span class="arithmatex">\(i\)</span> 的直线只对</p>
+<div class="arithmatex">\[
+[mid+1,\min(r,r_i)]
+\]</div>
+<p>有效。把这些有效区间挂到一棵临时线段树上，每条线段被拆成 <span class="arithmatex">\(O(\log n)\)</span> 个完整节点。对每个临时线段树节点，建立一棵 Li Chao Tree，插入挂在该节点上的所有直线，并查询该节点覆盖的所有右半站点。</p>
+<p>这样每个跨分治区间的有效贡献都会在且只会在一个覆盖目标点的临时节点中被查询到。</p>
+<h2 id="_3">正确性说明</h2>
+<p>CDQ 分治按下标处理转移。任意合法转移 <span class="arithmatex">\(i\to j\)</span> 满足 <span class="arithmatex">\(i&lt;j\)</span>，必然存在唯一一层分治，使得 <span class="arithmatex">\(i\)</span> 位于该层左半，<span class="arithmatex">\(j\)</span> 位于该层右半。在这一层，<span class="arithmatex">\(dp_i\)</span> 已经由递归左半求出，然后该转移会被加入临时线段树中覆盖 <span class="arithmatex">\(j\)</span> 的节点，从而参与更新 <span class="arithmatex">\(dp_j\)</span>。</p>
+<p>Li Chao Tree 对同一批直线在对应坐标集合上求最小值，因此能正确得到这些转移对每个 <span class="arithmatex">\(j\)</span> 的最小贡献。所有合法转移都被考虑，非法过期转移不会被加入目标区间，所以最终得到的 <span class="arithmatex">\(dp_n\)</span> 正确。</p>
+<h2 id="_4">复杂度</h2>
+<p>每条跨区间直线在一层 CDQ 中被拆到 <span class="arithmatex">\(O(\log n)\)</span> 个临时节点。整体复杂度约为</p>
+<div class="arithmatex">\[
+O(n\log^3 n),
+\]</div>
+<p>在本题范围内可以通过。空间复杂度为 <span class="arithmatex">\(O(n\log n)\)</span> 的临时存储峰值。</p>
+<h2 id="_5">易错点</h2>
+<ul>
+<li><span class="arithmatex">\(c_1\)</span> 不计入初始代价。</li>
+<li>只有 <span class="arithmatex">\(j\le r_i\)</span> 的转移有效。</li>
+<li>计算直线截距和答案时要使用 <code>long long</code>，乘法处建议使用 <code>__int128</code> 防止中间溢出。</li>
+</ul>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

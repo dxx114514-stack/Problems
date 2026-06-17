@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T622601 刷题</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../">← Back to directory</a>
+    </div>
+    <h1 id="t622601">T622601 刷题</h1>
+<h2 id="_1">题目描述</h2>
+<p>小明在<span class="arithmatex">\(GL\)</span>刷题。\<br />
+已知<span class="arithmatex">\(GL\)</span>有<span class="arithmatex">\(N\)</span>道小明会的题，每道题都有<span class="arithmatex">\(v_i\)</span>的分，即只要小明<span class="arithmatex">\(AC\)</span>了第<span class="arithmatex">\(i\)</span>题，就能拿到<span class="arithmatex">\(v_i\)</span>分，但是小明<span class="arithmatex">\(AC\)</span>这道题需要<span class="arithmatex">\(t_i\)</span>分钟。\<br />
+小明的妈妈只允许他刷<span class="arithmatex">\(T\)</span>分钟的题，而小明又想好好利用这<span class="arithmatex">\(T\)</span>分钟，尽可能多得拿到分。\<br />
+现在给出<span class="arithmatex">\(N,T\)</span>与所有的<span class="arithmatex">\(v_i\)</span>和<span class="arithmatex">\(t_i\)</span>，求小明在<span class="arithmatex">\(T\)</span>分钟内最多能获得多少分？</p>
+<h2 id="_2">输入格式</h2>
+<p>本题有多组数据。\<br />
+第一行一个正整数<span class="arithmatex">\(Q\)</span>，表示<span class="arithmatex">\(Q\)</span>组数据。\<br />
+对于每组数据，给出<span class="arithmatex">\(N,T\)</span>，分别表示题目数量以及小明可刷题的时间。\<br />
+接下来一行，有<span class="arithmatex">\(N\)</span>个正整数，第<span class="arithmatex">\(i\)</span>个数表示<span class="arithmatex">\(v_i\)</span>。\<br />
+在接下来一行，也有<span class="arithmatex">\(N\)</span>个正整数，第<span class="arithmatex">\(i\)</span>个数表示<span class="arithmatex">\(t_i\)</span>。</p>
+<h2 id="_3">输出格式</h2>
+<p>对于每组数据，输出一行，一个正整数，表示答案。</p>
+<h2 id="1">输入输出样例 #1</h2>
+<h3 id="1_1">输入 #1</h3>
+<pre><code>3
+6 15
+5 6 4 6 5 2
+6 5 6 6 3 7
+3 8
+30 50 60
+3 4 5
+4 10
+1 3 5 9
+2 3 4 7
+</code></pre>
+<h3 id="1_2">输出 #1</h3>
+<pre><code>17
+90
+12
+</code></pre>
+<h2 id="_4">说明/提示</h2>
+<p>对于<span class="arithmatex">\(20\%\)</span>的数据：<span class="arithmatex">\(1 \le N \le 12\)</span>,<span class="arithmatex">\(1 \le T \le 50\)</span>，<span class="arithmatex">\(1 \le v_i,t_i \le 50\)</span>。\<br />
+对于<span class="arithmatex">\(100\%\)</span>的数据：<span class="arithmatex">\(1 \le N \le 10^5\)</span>,<span class="arithmatex">\(1 \le T \le 100\)</span>，<span class="arithmatex">\(1 \le v_i,t_i \le 10^9\)</span>。</p>
+<p>保证<span class="arithmatex">\(1 \le Q \le 5\)</span>。</p>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

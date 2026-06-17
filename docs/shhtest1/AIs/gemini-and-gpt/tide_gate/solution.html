@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>潮汐门题解</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --code-bg: #f1f5f9;
+            --border-color: #e2e8f0;
+            --copy-btn-bg: #e2e8f0;
+            --copy-btn-hover: #cbd5e1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .nav {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.25rem; }
+        p {
+            margin-bottom: 1rem;
+        }
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.875rem;
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--copy-btn-bg);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background: var(--copy-btn-hover);
+        }
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background: var(--code-bg);
+            font-weight: 600;
+        }
+        .tabbed-content {
+            margin-bottom: 1rem;
+        }
+        .tabbed-labels {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .tabbed-label {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .tabbed-label.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .tabbed-content > div {
+            display: none;
+            padding: 1rem 0;
+        }
+        .tabbed-content > div.active {
+            display: block;
+        }
+    </style>
+    <!-- highlight.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax for LaTeX/KaTeX rendering -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'arithmatex'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="nav">
+        <a href="../../../../">← Back to directory</a>
+    </div>
+    <h1 id="_1">潮汐门题解</h1>
+<h2 id="_2">关键观察</h2>
+<p>到达同一个点时，真正影响后续选择的是当前时刻对 <span class="arithmatex">\(P\)</span> 取模的结果。<br />
+因此可以把状态扩成 <span class="arithmatex">\((u, r)\)</span>，表示到达点 <span class="arithmatex">\(u\)</span> 且当前时刻模 <span class="arithmatex">\(P\)</span> 为 <span class="arithmatex">\(r\)</span> 的最早时间。</p>
+<p>从状态 <span class="arithmatex">\((u,r)\)</span> 走边 <span class="arithmatex">\((u,v,w,l,r')\)</span> 时，只需要计算最少等待多久，使新的出发余数落在 <span class="arithmatex">\([l,r']\)</span> 内：</p>
+<ul>
+<li>若当前余数已经在区间内，等待 <span class="arithmatex">\(0\)</span>；</li>
+<li>若当前余数小于 <span class="arithmatex">\(l\)</span>，等待 <span class="arithmatex">\(l-r\)</span>；</li>
+<li>否则等待到下一个周期的 <span class="arithmatex">\(l\)</span>。</li>
+</ul>
+<p>边权都是非负的，所以在扩展状态图上跑 Dijkstra 即可。</p>
+<h2 id="_3">算法</h2>
+<p>令 <code>dist[u][rem]</code> 为到达状态 <span class="arithmatex">\((u,rem)\)</span> 的最早时间，初始 <code>dist[1][0]=0</code>。</p>
+<p>每次从优先队列中取出当前最小时刻 <code>t</code> 的状态 <code>(u, rem)</code>，枚举所有从 <code>u</code> 出发的边：</p>
+<ol>
+<li>计算需要等待的时间 <code>wait</code>；</li>
+<li>新时刻为 <code>nt=t+wait+w</code>；</li>
+<li>新余数为 <code>nt % P</code>；</li>
+<li>若能更新 <code>dist[v][nt%P]</code>，则加入优先队列。</li>
+</ol>
+<p>答案为 <span class="arithmatex">\(\min_{0\le r&lt;P} dist[n][r]\)</span>。</p>
+<h2 id="_4">正确性说明</h2>
+<p>扩展后的每个状态完整记录了当前位置和之后所有潮汐限制所需的时间余数。<br />
+对任意真实可行行程，它在扩展图中对应一条状态路径；每次等待和通过边的耗时与真实行程一致。反过来，扩展图中的每条转移都选择了满足开放区间的最早可行出发时刻，因此也对应真实可行行程。</p>
+<p>扩展图中所有转移代价非负，Dijkstra 能求出从 <span class="arithmatex">\((1,0)\)</span> 到所有状态的最短时间，所以取终点 <span class="arithmatex">\(n\)</span> 的所有余数状态最小值即为最早到达时刻。</p>
+<h2 id="_5">复杂度</h2>
+<p>状态数为 <span class="arithmatex">\(nP\)</span>。每个状态会枚举该点所有出边一次，总转移数为 <span class="arithmatex">\(mP\)</span>。</p>
+<p>时间复杂度为 <span class="arithmatex">\(O((nP+mP)\log(nP))\)</span>，空间复杂度为 <span class="arithmatex">\(O(nP+m)\)</span>。</p>
+<h2 id="_6">易错点</h2>
+<ul>
+<li>区间 <span class="arithmatex">\([l_i,r_i]\)</span> 是闭区间。</li>
+<li>当前余数大于 <span class="arithmatex">\(r_i\)</span> 时，需要等到下一个周期的 <span class="arithmatex">\(l_i\)</span>。</li>
+<li>答案不是 <code>dist[n][0]</code>，而是终点所有余数状态的最小值。</li>
+</ul>
+    <script>
+        function fallbackCopy(text, button) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+            } catch (err) {
+                button.textContent = 'Error';
+            }
+            document.body.removeChild(textarea);
+        }
+        // Initialize highlight.js
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre').forEach((pre) => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.querySelector('code');
+                const text = code.innerText;
+                // Try modern API first, fallback to execCommand
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.textContent = 'Copied!';
+                        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                    }).catch(() => {
+                        fallbackCopy(text, button);
+                    });
+                } else {
+                    fallbackCopy(text, button);
+                }
+            });
+            pre.appendChild(button);
+        });
+        // Tabbed content (pymdownx.tabbed)
+        document.querySelectorAll('.tabbed-labels').forEach((labels) => {
+            const tabs = labels.nextElementSibling;
+            if (!tabs) return;
+            const tabDivs = tabs.querySelectorAll(':scope > div');
+            const labelDivs = labels.querySelectorAll(':scope > div');
+            labelDivs.forEach((label, i) => {
+                label.addEventListener('click', () => {
+                    labelDivs.forEach(l => l.classList.remove('active'));
+                    tabDivs.forEach(t => t.classList.remove('active'));
+                    label.classList.add('active');
+                    if (tabDivs[i]) tabDivs[i].classList.add('active');
+                });
+            });
+            // Activate first tab
+            if (labelDivs.length > 0) {
+                labelDivs[0].classList.add('active');
+                if (tabDivs[0]) tabDivs[0].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
