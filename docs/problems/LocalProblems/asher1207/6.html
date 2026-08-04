@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T604595 奖项查询</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>T604595 奖项查询</h1>
+<h2>题目描述</h2>
+<p>某比赛成绩新鲜出炉！该比赛分为一二三等奖和优秀奖（保证每个人都有奖），比赛官方即将公布每位选手的奖项。本场比赛规定排名在前$10\%$的人可以获得一等奖，另外的前$20\%$的人获得二等奖，剩下的前$20\%$的人获得三等奖，其余$50\%$人获得参与奖。\
+换句话说，$10$个人中，$1$人获得一等奖，$2$人获得二等奖，$2$人获得三等奖，$5$人获得优秀奖。\
+可是，这个比赛排名有个规则漏洞：若两者分数一样，则排名学生编号从小到大排列。同时，这些学生一起要去查询奖项。由于任务繁重，比赛官方把这个规定分数线和告知奖项这个繁重的任务交给了你。</p>
+<h2>输入格式</h2>
+<p>第一行一个正整数$n$第二行到第$n+1$行，每行一个数，第$i$行的数表示学生编号为$i$的学生在该比赛中的成绩。</p>
+<h2>输出格式</h2>
+<p>$n$行，每行一个整数，第$i$行表示学生编号为$i$的学生的奖项，其中：\
+一等奖表示为<code>First Prize</code>\
+二等奖表示为<code>Second Prize</code>\
+三等奖表示为<code>Third Prize</code>\
+优秀奖表示为<code>Perfect Prize</code></p>
+<h2>输入输出样例 #1</h2>
+<h3>输入 #1</h3>
+<pre><code>10
+62
+72
+43
+28
+55
+85
+91
+62
+28
+89
+</code></pre>
+<h3>输出 #1</h3>
+<pre><code>Third Prize 
+Third Prize 
+Perfect Prize 
+Perfect Prize 
+Perfect Prize 
+Second Prize 
+First Prize 
+Perfect Prize 
+Perfect Prize 
+Second Prize 
+</code></pre>
+<h2>输入输出样例 #2</h2>
+<h3>输入 #2</h3>
+<pre><code>见下面附件in.in
+</code></pre>
+<h3>输出 #2</h3>
+<pre><code>见下面附件out.out
+</code></pre>
+<h2>说明/提示</h2>
+<h3>样例解释</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">名次</th>
+<th style="text-align: right;">$1$</th>
+<th style="text-align: right;">$2$</th>
+<th style="text-align: right;">$3$</th>
+<th style="text-align: right;">$4$</th>
+<th style="text-align: right;">$5$</th>
+<th style="text-align: right;">$6$</th>
+<th style="text-align: right;">$7$</th>
+<th style="text-align: right;">$8$</th>
+<th style="text-align: right;">$9$</th>
+<th style="text-align: right;">$10$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">学生编号</td>
+<td style="text-align: right;">$7$</td>
+<td style="text-align: right;">$10$</td>
+<td style="text-align: right;">$6$</td>
+<td style="text-align: right;">$2$</td>
+<td style="text-align: right;">$1$</td>
+<td style="text-align: right;">$8$</td>
+<td style="text-align: right;">$5$</td>
+<td style="text-align: right;">$3$</td>
+<td style="text-align: right;">$4$</td>
+<td style="text-align: right;">$ 9$</td>
+</tr>
+<tr>
+<td style="text-align: right;">分数</td>
+<td style="text-align: right;">$91$</td>
+<td style="text-align: right;">$89$</td>
+<td style="text-align: right;">$85$</td>
+<td style="text-align: right;">$72$</td>
+<td style="text-align: right;">$62$</td>
+<td style="text-align: right;">$62$</td>
+<td style="text-align: right;">$56$</td>
+<td style="text-align: right;">$43$</td>
+<td style="text-align: right;">$28$</td>
+<td style="text-align: right;">$28$</td>
+</tr>
+</tbody>
+</table>
+<h3><strong>数据范围</strong></h3>
+<p>本题采用$subtask$捆绑测试，你需要完成相应子任务的所有测试点才能拿到该测试点的分数。
+|子任务编号  | 分值 | 数据范围 |
+| -----------: | -----------: | -----------: |
+| 子任务$1$ | $30$ | $1\leqslant n \leqslant 10^2，1\leqslant a_i\leqslant 10^3$ |
+| 子任务$2$ | $70$ | $1\leqslant n \leqslant 3×10^3，1\leqslant a_i\leqslant 3×10^4$ |</p>
+<p>保证$n$是$10$的倍数</p>
+</body>
+</html>

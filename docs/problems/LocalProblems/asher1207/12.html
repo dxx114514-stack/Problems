@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T619275 mul Problem plus</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>T619275 mul Problem plus</h1>
+<h2>题目描述</h2>
+<p>给定$n$和一个长度为$n$的数组$a$，同时给出$L,R$，求出$\prod_{i=L}^R a_i$ $mod$ $100003$的结果。</p>
+<h2>输入格式</h2>
+<p>第一行，一个整数$n$\
+第二行，有$n$个正整数，代表数组$a$\
+第三行，一个正整数$Q$，表示询问次数\
+对于每组询问，占一行，有两个正整数$L,R$</p>
+<h2>输出格式</h2>
+<p>对于每组询问，输出一个数表示答案。</p>
+<h2>输入输出样例 #1</h2>
+<h3>输入 #1</h3>
+<pre><code>5
+4 9 16 3 6
+2
+1 3
+2 5
+</code></pre>
+<h3>输出 #1</h3>
+<pre><code>576
+2592
+</code></pre>
+<h2>说明/提示</h2>
+<p>对于$10\%$的数据：$1 \leq L &lt; R \leq n \leq 10$，$1 \leq a_i \leq 50$，$1 \leq Q \leq 5$\
+对于$30\%$的数据：$1 \leq L &lt; R \leq n \leq 10^4$，$1 \leq a_i \leq 10^5$，$1 \leq Q \leq 10^3$\
+对于$100\%$的数据：$1 \leq L &lt; R \leq n \leq 5 \times 10^5$，$1 \leq a_i \leq 10^5$，$1 \leq Q \leq 2 \times 10^5$</p>
+</body>
+</html>

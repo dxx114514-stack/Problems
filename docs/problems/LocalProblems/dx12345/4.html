@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T659675 BrainF**k</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>T659675 BrainF**k</h1>
+<h2>题目背景</h2>
+<p>有一天小明在网上冲浪时看到了一款名叫<strong>BrainF**k</strong>的编程语言,但是苦于没有编译器，所以说他无法亲身体验。现在请你写一个解释器，用来解释小明输入的代码。</p>
+<h2>题目描述</h2>
+<p><strong>BrainF**k</strong>会先给你一个长度为3万数组，范围是0~255。还会给你一个指针，用于指向你现在正在操作的元素，初始为最开始的元素。数组中所有数据初始化为零。</p>
+<p>他的语法有：用<code>&lt;</code>向左移动指针，用<code>&gt;</code>向右移动指针。用<code>+</code>给现在指针所指向的元素的数值加一，用<code>-</code>给现在指针所指向的元素减一。使用<code>[]</code>循环，循环直到当前指针所指向的元素等于零，使用<code>,</code>来从用户输入一个字符（保证一定有输入），使用<code>.</code>来输出一个字符到控制台（强转）。没有在上面提到的字符则是全部为注释。为方便理解，设代码中包含n个<code>,</code>和m个<code>.</code> ，代码长度为<code>S</code>，此处输入输出的皆为数。另外，你需要处理指针越界的情况。又因你写的是解释器，所以在那之前要处理代码。越界时输出“SF”并终止。当一个循环超过255次时，认定其为死循环，输出“TLE”并终止。（具体参见：<a href="https://b23.tv/kR5bCwM">https://b23.tv/kR5bCwM</a>）</p>
+<h2>输入格式</h2>
+<p>输入第一行，一个不包含空格的字符串，就是这个语言的代码。</p>
+<p>接下来一行，n个数作为输入。</p>
+<h2>输出格式</h2>
+<p>一行,m个数,代码的输出。每个输出间空格分隔</p>
+<h2>输入输出样例 #1</h2>
+<h3>输入 #1</h3>
+<pre><code>&lt;&gt;,++.
+1
+</code></pre>
+<h3>输出 #1</h3>
+<pre><code>SF
+</code></pre>
+<h2>输入输出样例 #2</h2>
+<h3>输入 #2</h3>
+<pre><code>&gt;,++.
+1
+</code></pre>
+<h3>输出 #2</h3>
+<pre><code>3
+</code></pre>
+<h2>输入输出样例 #3</h2>
+<h3>输入 #3</h3>
+<pre><code>&gt;&gt;,&lt;&lt;,++&gt;&gt;[-].&lt;&lt;.
+1 2
+</code></pre>
+<h3>输出 #3</h3>
+<pre><code>0 4
+</code></pre>
+<h2>输入输出样例 #4</h2>
+<h3>输入 #4</h3>
+<pre><code>&gt;&gt;++.&lt;&lt;&lt;
+</code></pre>
+<h3>输出 #4</h3>
+<pre><code>2 SF
+</code></pre>
+<h2>输入输出样例 #5</h2>
+<h3>输入 #5</h3>
+<pre><code>+[&gt;+]
+</code></pre>
+<h3>输出 #5</h3>
+<pre><code>TLE
+</code></pre>
+<h2>说明/提示</h2>
+<table>
+<thead>
+<tr>
+<th>子任务编号</th>
+<th>测试点占比</th>
+<th>限制</th>
+<th>依赖关系</th>
+<th>限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>20%</td>
+<td>$S \le 10$,$n \le 2$,$m \le 2$</td>
+<td>无</td>
+<td>没有循环</td>
+</tr>
+<tr>
+<td>2</td>
+<td>30%</td>
+<td>$S \le 100$,$n \le 10$,$m \le 10$</td>
+<td>1</td>
+<td>无</td>
+</tr>
+<tr>
+<td>3</td>
+<td>50%</td>
+<td>$S \le 10000$</td>
+<td>2</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

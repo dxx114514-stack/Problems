@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T604592 又是整数裂项</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>T604592 又是整数裂项</h1>
+<h2>题目描述</h2>
+<p>我们通常把$1×2×3......×a + 2×3......×(a+1)+......+b×（b+1）......×（b+a-1）$这类算式叫做整数裂项。现在小明得到了数$a,b$，但是小明比较懒，想让会编程的你帮他写段代码来解决问题。</p>
+<h2>输入格式</h2>
+<p>本题有多组测试数据
+第一行一个整数$T$，代表测试数据数量。
+针对每组数据，输入一行，两个正整数$a,b$</p>
+<h2>输出格式</h2>
+<p>针对每组数据，输出一行，表示答案乘$a+1$后对$10^9+7$取模的结果</p>
+<h2>输入输出样例 #1</h2>
+<h3>输入 #1</h3>
+<pre><code>3
+3 2
+100 75
+959649 874853
+</code></pre>
+<h3>输出 #1</h3>
+<pre><code>120
+656864717
+5955211
+</code></pre>
+<h2>说明/提示</h2>
+<p>对于$7\%$的数据：$1\le a,b\le 10,1\le T\le 5$\
+对于$31\%$的数据：$1\le a,b\le 10^3,1\le  T\le 10$\
+对于$55\%$的数据：$1\le a,b\le 2 \times10^5,1\le T\le 100$\
+对于$100\%$的数据：$1\le a,b\le 10^6,1\le T\le 10^5$</p>
+<p>$update$ $2025.05.30$：加强数据\
+$update$ $2025.07.06$：重造数据（$100$个）</p>
+</body>
+</html>

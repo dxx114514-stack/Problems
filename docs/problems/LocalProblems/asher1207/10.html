@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T609542 单词接龙长度</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>T609542 单词接龙长度</h1>
+<h2>题目描述</h2>
+<p>$Asher$和他的朋友一起玩单词接龙游戏，规则如下：\
+$1.$接龙队列中第$i$个单词的首字母要和第$i-1$个单词的结尾字母相同才可以。\
+$2.$规定单词的编号是输入时的顺序。即单词$s_m$的编号是$m$。接龙队列里对于任意$i,j$满足$1\le i &lt; j \le k$（$k$表示接龙队列的长度）都有$s_i$的编号小于$s_j$的编号。\
+\
+但是由于$Asher$和朋友们英语不好，他们只会$n$个单词，假设每个人都会这$n$个单词。\
+现在给定$n$，以及$Asher$和他的朋友们都会的单词。$Asher$想知道上述规则中满足条件的$i$最大是多少？或者说，这个接龙队列最多有多少项？</p>
+<h2>输入格式</h2>
+<p>第一行，一个整数$n$，表示$Asher$和朋友们会的单词数量。\
+第二行，$n$个字符串$S_k$，表示$Asher$和他的朋友会的单词。</p>
+<h2>输出格式</h2>
+<p>一行，一个整数，表示答案。</p>
+<h2>输入输出样例 #1</h2>
+<h3>输入 #1</h3>
+<pre><code>5
+cat car dog tac coat
+</code></pre>
+<h3>输出 #1</h3>
+<pre><code>3
+</code></pre>
+<h2>说明/提示</h2>
+<h3><strong>样例解释：</strong></h3>
+<p>单词接龙队列如下：\
+$cat-&gt;tac-&gt;coat$</p>
+<h3><strong>数据范围：</strong></h3>
+<p>本题采用$subtask$捆绑测试，你需要完成相应子任务的所有测试点，才能拿到该测试点相应的分数
+|子任务编号  |分值  |数据范围  |
+| :----------- | :----------- | :----------- |
+|子任务$1$  |$20$分  |$1\le n \le 10$  |
+|子任务$2$  |$20$分  |$1\le n \le 10^3$  |
+|子任务$3$  |$60$分 |$1\le n \le 5×10^5$  |</p>
+<p>保证每一个单词长度不超过$15$，每个单词都只由小写字母构成</p>
+</body>
+</html>

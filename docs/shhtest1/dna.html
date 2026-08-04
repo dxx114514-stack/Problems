@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T762052 基因编辑的碱基配对</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>T762052 基因编辑的碱基配对</h1>
+<h2>题目背景</h2>
+<p>kimi</p>
+<h2>题目描述</h2>
+<p>科学家获得了一条 DNA 序列，由 $n$ 个碱基组成，每个碱基是 <code>A</code>、<code>T</code>、<code>C</code>、<code>G</code> 之一。</p>
+<p>基因编辑仪器可以执行一种特殊的<strong>排序转录</strong>操作：给定区间 $[l,r]$，将该区间内的所有碱基按照 <code>A</code> &lt; <code>T</code> &lt; <code>C</code> &lt; <code>G</code> 的字典序排序后，按原顺序重新填充回该区间。</p>
+<p>为了验证编辑结果，科学家需要随时查询某段区间 $[l,r]$ 的<strong>基因指纹</strong>（即排序后该区间的哈希值）。</p>
+<p>哈希规则如下：设排序后的碱基序列为 $b_1,b_2,\dots,b_L$（$L=r-l+1$），定义其哈希值为
+$$H = \sum_{i=1}^{L} val(b_i) \cdot P^{i-1} \pmod{998244353}$$
+其中 $val(<code>A</code>)=1, val(<code>T</code>)=2, val(<code>C</code>)=3, val(<code>G</code>)=4$，$P$ 是给定的正整数。</p>
+<p>操作有两种：</p>
+<ul>
+<li><code>1 l r</code>：对区间 $[l,r]$ 进行排序转录。</li>
+<li><code>2 l r</code>：查询区间 $[l,r]$ 的基因指纹 $H$</li>
+</ul>
+<h2>输入格式</h2>
+<p>第一行三个整数 $n,m,P$。</p>
+<p>第二行一个长度为 $n$ 的字符串，表示初始 DNA 序列。</p>
+<p>接下来 $m$ 行，每行一个操作，格式如题所述。</p>
+<h2>输出格式</h2>
+<p>对于每个操作 <code>2</code>，输出一行一个整数，表示基因指纹 $H$。</p>
+<h2>输入输出样例 #1</h2>
+<h3>输入 #1</h3>
+<pre><code>4 3 10
+TCAG
+2 1 4
+1 2 3
+2 2 4
+</code></pre>
+<h3>输出 #1</h3>
+<pre><code>4321
+431
+</code></pre>
+<h2>说明/提示</h2>
+<ul>
+<li>初始序列 <code>TCAG</code>，排序后 <code>ATCG</code>（按 <code>A&lt;T&lt;C&lt;G</code>）。</li>
+<li>$H = 1\cdot 10^0 + 2\cdot 10^1 + 3\cdot 10^2 + 4\cdot 10^3 = 1 + 20 + 300 + 4000 = 4321$。</li>
+<li>操作 <code>1 2 3</code>：区间 <code>CA</code> 排序后 <code>AC</code>，序列变为 <code>T A C G</code>。</li>
+<li>查询 <code>2 2 4</code>：区间 <code>ACG</code>，排序后 <code>ACG</code>（已有序）。</li>
+<li>$H = 1\cdot 10^0 + 3\cdot 10^1 + 4\cdot 10^2 = 1 + 30 + 400 = 431$。</li>
+</ul>
+<h2>数据范围</h2>
+<ul>
+<li>$1 \le n,m \le 2\times 10^5$</li>
+<li>$2 \le P &lt; 998244353$</li>
+<li>字符串只包含 <code>A</code>、<code>T</code>、<code>C</code>、<code>G</code></li>
+</ul>
+</body>
+</html>

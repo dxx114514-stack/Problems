@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玻璃森林题解</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>玻璃森林题解</h1>
+<h2>关键观察</h2>
+<p>若知道一段序列的：</p>
+<ul>
+<li>最左端颜色；</li>
+<li>最右端颜色；</li>
+<li>内部连续颜色段数量；</li>
+</ul>
+<p>就可以合并两段相邻序列。若左段右端颜色等于右段左端颜色，合并后段数需要减一。</p>
+<p>因此可以在线段树中维护这三个信息，再用树链剖分把树上路径拆成若干条重链区间。</p>
+<h2>算法</h2>
+<p>对树做重链剖分，将每个点映射到 DFS 序位置。线段树的每个节点维护：</p>
+<ul>
+<li><code>lc</code>：区间按 DFS 序从左到右的第一个颜色；</li>
+<li><code>rc</code>：区间按 DFS 序从左到右的最后一个颜色；</li>
+<li><code>cnt</code>：区间颜色段数量。</li>
+</ul>
+<p>点修改就是线段树单点修改。</p>
+<p>路径询问时，路径方向很重要：</p>
+<ul>
+<li>从 $u$ 往上跳的重链区间，在 DFS 序里是从链顶到 $u$，但路径顺序是从 $u$ 到链顶，所以要反转左右端颜色；</li>
+<li>从 $v$ 往上跳得到的区间，最终应接在答案右侧，因此需要按从链顶到 $v$ 的顺序拼到右半答案前面。</li>
+</ul>
+<p>最后同一条重链上的中间区间也按实际路径方向处理，再合并左右两部分。</p>
+<h2>正确性说明</h2>
+<p>线段树节点信息足以描述一段颜色序列与相邻序列合并时会产生的影响。合并公式只在两段交界处可能改变段数，因此维护的信息完备。</p>
+<p>树链剖分将任意树上路径拆成若干个不交的链上连续区间。查询过程中分别维护从原始 $u$ 出发的左半路径和通向原始 $v$ 的右半路径，并在每段加入前调整方向，所以合并顺序与真实路径颜色序列一致。最终得到的段数就是题目所求。</p>
+<h2>复杂度</h2>
+<p>预处理 $O(n)$，每次修改 $O(\log n)$，每次询问拆成 $O(\log n)$ 条链，每条链做一次线段树查询，因此复杂度为 $O(\log^2 n)$。</p>
+<p>空间复杂度 $O(n)$。</p>
+<h2>易错点</h2>
+<ul>
+<li>路径查询不是无向集合查询，颜色段数依赖方向。</li>
+<li>合并两段时，只有交界颜色相同才减一。</li>
+<li>修改的是点颜色，不是边颜色。</li>
+</ul>
+</body>
+</html>

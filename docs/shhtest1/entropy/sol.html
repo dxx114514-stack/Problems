@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题解：量子纠缠的纠缠熵</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h2>题解：量子纠缠的纠缠熵</h2>
+<h3>核心观察</h3>
+<p>相邻关系只存在于 $i$ 与 $i+1$ 之间。若 $a_i \oplus a_{i+1} &gt; k$，则 $i$ 与 $i+1$ 之间有一条<strong>断裂边</strong>。</p>
+<p>断裂边将序列划分为若干个连续的纠缠簇。设各簇长度为 $L_1, L_2, \dots, L_t$，则
+$$S = \sum L_i^2$$</p>
+<p>修改位置 $p$ 的自旋值，只会影响两条相邻边：$(p-1,p)$ 与 $(p,p+1)$。因此最多只有两个断裂点会发生变化，最多导致三个相邻簇合并或分裂。</p>
+<h3>算法</h3>
+<p>用 <code>std::set</code> 维护所有断裂边的位置（存储左端点下标 $i$，表示 $i$ 与 $i+1$ 之间断裂）。同时维护当前的总纠缠熵 $S$。</p>
+<ul>
+<li>初始 $O(n)$ 扫描，建立断裂边集合，并计算初始 $S$。加入哨兵断裂边 $-1$ 和 $n-1$（表示首尾外侧）。</li>
+<li>修改位置 $p$：</li>
+<li>找到 $p$ 所在簇（通过 set 的 <code>upper_bound</code> 找到左右断裂边）。</li>
+<li>将该簇的长度贡献从 $S$ 中减去。</li>
+<li>检查并更新边 $(p-1,p)$ 与 $(p,p+1)$ 的断裂状态（注意边界）。</li>
+<li>重新计算受影响后的簇长度，将新贡献加回 $S$。</li>
+<li>查询操作直接输出 $S$。</li>
+</ul>
+<h3>复杂度</h3>
+<ul>
+<li>时间：$O((n+m)\log n)$，set 操作与常数次簇长度更新。</li>
+<li>空间：$O(n)$。</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图的直径</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>图的直径</h1>
+<p><strong>时间限制：</strong> 4 秒<br />
+<strong>内存限制：</strong> 512 MB</p>
+<h2>题目描述</h2>
+<p>给定一个 $n$ 个节点、$m$ 条边的无向图 $G$。图中可能有重边和自环。</p>
+<p>定义顶点 $v$ 的<strong>偏心率</strong> $d(v)$ 为 $v$ 到所有其他顶点的最短路距离的最大值。图的<strong>直径</strong>为 $\max_v d(v)$。</p>
+<p>你最多可以执行<strong>一次</strong>操作：选择任意一条边 $(u, v)$，将其权值<strong>加倍</strong>（乘以 2）。</p>
+<p>求操作后图的<strong>最小可能直径</strong>。</p>
+<h2>输入格式</h2>
+<ul>
+<li>第一行：两个整数 $n$ 和 $m$（$2 \le n \le 100{,}000$，$1 \le m \le 500{,}000$）。</li>
+<li>接下来 $m$ 行：每行三个整数 $u_i, v_i, w_i$（$1 \le u_i, v_i \le n$，$1 \le w_i \le 10^9$），描述一条权值为 $w_i$ 的边。</li>
+</ul>
+<h2>输出格式</h2>
+<p>一个整数——操作后图的最小可能直径。</p>
+<h2>样例</h2>
+<h3>样例 1</h3>
+<p><strong>输入：</strong></p>
+<pre><code>3 3
+1 2 1
+2 3 1
+1 3 3
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>2
+</code></pre>
+<p><strong>解释：</strong> 原始直径为 2（路径 1→2→3 权值为 2）。不操作即可达到最小直径。</p>
+<h3>样例 2</h3>
+<p><strong>输入：</strong></p>
+<pre><code>4 3
+1 2 5
+2 3 5
+3 4 5
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>15
+</code></pre>
+<p><strong>解释：</strong> 链状图，原始直径为 15。加倍任何边都会使直径更大或不变。</p>
+<h3>样例 3</h3>
+<p><strong>输入：</strong></p>
+<pre><code>5 4
+1 2 1
+2 3 1
+3 4 1
+4 5 10
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>13
+</code></pre>
+<h3>数据范围</h3>
+<ul>
+<li>$2 \le n \le 100{,}000$</li>
+<li>$1 \le m \le 500{,}000$</li>
+<li>$1 \le w_i \le 10^9$</li>
+<li>图连通</li>
+</ul>
+</body>
+</html>

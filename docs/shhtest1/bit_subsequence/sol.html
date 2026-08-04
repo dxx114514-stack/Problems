@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>位串回文子序列——题解</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>位串回文子序列——题解</h1>
+<h2>核心思路</h2>
+<p>区间 DP，从两端向中间扩展回文结构，同时维护值对 3 取模的结果。</p>
+<h3>关键性质</h3>
+<p>二进制数模 3 的递推：设当前值为 $v$，加入新最高位 $b$ 后，新值为 $v' = b \cdot 2^{L} + v$，其中 $L$ 为原串长度。模 3 下：$v' \equiv b \cdot 2^{L} + v \pmod{3}$。</p>
+<p>由于回文串从两端对称增长，可以同时追踪长度和值。</p>
+<h3>状态定义</h3>
+<p>$dp[i][j]$ 为一个哈希表/数组，记录子串 $s[i \dots j]$ 中所有回文子序列的 $(\text{长度},\ \text{值} \bmod 3) \to \text{方案数}$ 的映射。</p>
+<h3>转移</h3>
+<p>对于区间 $[i, j]$：
+1. 继承 $[i+1, j-1]$ 的所有回文子序列。
+2. 如果 $s[i] = s[j]$，将 $[i+1, j-1]$ 中每个回文子序列的两端各加一个 $s[i]$，更新长度和模 3 值。
+3. 加入单字符 $s[i]$ 和 $s[j]$（如果 $i \ne j$）。</p>
+<h3>复杂度</h3>
+<ul>
+<li>状态数：$O(n^2)$</li>
+<li>每个状态：$O(n)$（枚举子序列长度）</li>
+<li>总计：$O(n^3)$</li>
+</ul>
+<h2>标准代码</h2>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+const int MOD = 1e9 + 7;
+
+int main() {
+    int n, k;
+    string s;
+    cin &gt;&gt; n &gt;&gt; k &gt;&gt; s;
+
+    // dp[l][r]: map of (length, val%3) -&gt; count
+    map&lt;pair&lt;int,int&gt;, int&gt; dp[n][n];
+
+    for (int i = 0; i &lt; n; i++) {
+        int bit = s[i] - '0';
+        dp[i][i][{1, bit % 3}] = 1;
+    }
+
+    for (int len = 2; len &lt;= n; len++) {
+        for (int l = 0; l + len - 1 &lt; n; l++) {
+            int r = l + len - 1;
+            dp[l][r] = dp[l+1][r-1 &gt;= l ? r-1 : l]; // 继承内部
+
+            // 加入单字符
+            { int bit = s[l] - '0'; dp[l][r][{1, bit % 3}]++; }
+            if (r &gt; l) { int bit = s[r] - '0'; dp[l][r][{1, bit % 3}]++; }
+
+            // 两端匹配时扩展
+            if (s[l] == s[r]) {
+                int bit = s[l] - '0';
+                auto&amp; inner = dp[l+1][r-1 &gt;= l ? r-1 : l];
+                for (auto&amp; [key, cnt] : inner) {
+                    int newLen = key.first + 2;
+                    int newVal = (key.second * 2 + 2 * bit) % 3;
+                    dp[l][r][{newLen, newVal}] =
+                        (dp[l][r][{newLen, newVal}] + cnt) % MOD;
+                }
+                dp[l][r][{2, (2 * bit) % 3}]++;
+            }
+        }
+    }
+
+    int ans = 0;
+    for (int l = 0; l &lt; n; l++)
+        for (int r = l; r &lt; n; r++)
+            for (auto&amp; [key, cnt] : dp[l][r])
+                if (key.first &gt;= k &amp;&amp; key.second == 0)
+                    ans = (ans + cnt) % MOD;
+
+    cout &lt;&lt; ans &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+</body>
+</html>

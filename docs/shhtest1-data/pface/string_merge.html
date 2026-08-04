@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字符合并博弈</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>字符合并博弈</h1>
+<p><strong>时间限制：</strong> 2 秒<br />
+<strong>内存限制：</strong> 256 MB</p>
+<h2>题目描述</h2>
+<p>Alice 和 Bob 玩一个关于字符串的游戏。给定一个由小写字母组成的字符串 $s$。</p>
+<p>两人轮流操作，Alice 先手。每次操作：</p>
+<ol>
+<li>选择两个相邻字符 $s[i]$ 和 $s[i+1]$。</li>
+<li>删除这两个字符，在原位置插入一个新字符，新字符必须是：</li>
+<li>$s[i]$ 或 $s[i+1]$，<strong>或者</strong></li>
+<li>在字母表中位于 $s[i]$ 和 $s[i+1]$ 之间的某个字母（例如 $s[i]=\text{'a'}$，$s[i+1]=\text{'c'}$，则可选 'a'、'b'、'c'）。</li>
+</ol>
+<p>当字符串只剩一个字符时游戏结束，该字符即为游戏结果。</p>
+<p>Alice 希望结果尽量小（字典序），Bob 希望结果尽量大。两人都采用最优策略。</p>
+<p>求最终结果字符。</p>
+<h2>输入格式</h2>
+<p>一行一个字符串 $s$（$1 \le |s| \le 300$）。</p>
+<h2>输出格式</h2>
+<p>一个字符——游戏结果。</p>
+<h2>样例</h2>
+<h3>样例 1</h3>
+<p><strong>输入：</strong></p>
+<pre><code>acb
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>a
+</code></pre>
+<h3>样例 2</h3>
+<p><strong>输入：</strong></p>
+<pre><code>cba
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>a
+</code></pre>
+<h3>样例 3</h3>
+<p><strong>输入：</strong></p>
+<pre><code>ab
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>a
+</code></pre>
+<p><strong>解释：</strong> 只剩两个字符，Alice 必须合并。可选结果为 'a' 或 'b'。Alice 想要最小化，选 'a'。</p>
+<h2>数据范围</h2>
+<ul>
+<li>$1 \le |s| \le 300$</li>
+<li>$s$ 由小写英文字母组成</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题解：星际关税的按位与协议</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h2>题解：星际关税的按位与协议</h2>
+<h3>核心观察</h3>
+<p>按位与操作 $a_i \leftarrow a_i \&amp; x$ 有一个重要性质：<strong>每个 $a_i$ 的二进制表示中，1 的个数只减不增</strong>。因此，每个元素最多被修改 $O(\log(\max a_i))$ 次（最多 30 次）就会变为 0 并保持不变。</p>
+<p>关键剪枝：维护区间的<strong>按位或</strong> <code>OR</code>。如果 <code>(tr[u].orv &amp; x) == tr[u].orv</code>，说明该区间所有为 1 的位在 $x$ 中也都是 1，因此执行 <code>&amp;x</code> 后所有值不变，可以直接跳过该节点。</p>
+<p>否则，递归进入子节点。如果到达叶子节点，直接执行按位与并更新。</p>
+<h3>算法</h3>
+<p>线段树每个节点维护：
+- <code>sum</code>：区间和
+- <code>orv</code>：区间按位或</p>
+<p><code>update(u,l,r,L,R,x)</code>：
+- 如果区间 <code>[l,r]</code> 与 <code>[L,R]</code> 无交，返回。
+- 如果 <code>(tr[u].orv &amp; x) == tr[u].orv</code>，返回（无需修改）。
+- 如果 <code>l == r</code>，直接 <code>a[l] &amp;= x</code>，更新 <code>sum</code> 和 <code>orv</code>，返回。
+- 下传到子节点，递归更新。
+- <code>pushup</code> 合并。</p>
+<p><code>query</code>：标准线段树区间求和。</p>
+<h3>复杂度</h3>
+<ul>
+<li>时间：$O((n + m)\log n \log A)$，其中 $A = 2^{30}$。均摊分析保证每个元素最多被修改 $O(\log A)$ 次。</li>
+<li>空间：$O(n)$。</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一、思路推导</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h2>一、思路推导</h2>
+<ol>
+<li>问题特征：字符串拆分、多阶段决策、求最优解，典型<strong>动态规划</strong>场景。</li>
+<li>状态设计：定义 dp[i] 表示前 i 个字符拆分后的最大乘积，dp[0]=1 作为乘法初始单位元。</li>
+<li>分割逻辑：对每个位置 i，枚举分割点 j，将字符串分为 [0,j) 和 [j,i) 两段。</li>
+<li>规则约束：题目禁止分段出现前导零，因此当分段长度&gt;1且首字符为'0'时，直接跳过该分割方案。</li>
+<li>状态转移：dp[i] = max(dp[i], dp[j] × 区间[j,i) 对应的数字)。</li>
+</ol>
+<h2>二、算法分析</h2>
+<p>核心算法：区间动态规划，数位拆分变形题。</p>
+<h2>三、复杂度分析</h2>
+<ol>
+<li>时间复杂度：$O(n^3)$
+   n 为字符串长度。两层循环枚举分割点（$O(n^2)$），内层循环截取数字（$O(n)$）。n≤20，运算量极小。</li>
+<li>空间复杂度：$O(n)$
+   仅使用一维 dp 数组，长度为 n+1。</li>
+</ol>
+<h2>四、关键点与易错点</h2>
+<ol>
+<li>边界规则：单个字符 '0' 合法；长度大于 1 的分段，首字符为 0 直接非法。</li>
+<li>初始值：dp[0] 必须设为 1，否则乘法递推不成立。</li>
+<li>数据类型：乘积结果较大，必须使用 long long 防止溢出。</li>
+</ol>
+<h2>五、优化方向</h2>
+<p>预处理所有子串对应的数字，可将复杂度降至 $O(n^2)$，对于 n≤20 提升不明显。</p>
+</body>
+</html>

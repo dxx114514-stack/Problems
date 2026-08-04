@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>霓虹配方题解</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>霓虹配方题解</h1>
+<h2>DP 形式</h2>
+<p>设 $dp_i$ 表示从站点 $1$ 到站点 $i$ 的最小代价，$dp_1=0$。有转移：</p>
+<p>$$
+dp_j=\min_{i&lt;j,\ j\le r_i}{dp_i+b_i+(x_j-x_i)^2+c_j}.
+$$</p>
+<p>展开平方：</p>
+<p>$$
+dp_i+b_i+x_i^2-2x_i x_j+x_j^2+c_j.
+$$</p>
+<p>对固定的 $i$，它给后继 $j$ 贡献一条直线</p>
+<p>$$
+y=(-2x_i)x + (dp_i+b_i+x_i^2),
+$$</p>
+<p>在 $x=x_j$ 处查询，再加上 $x_j^2+c_j$。</p>
+<p>难点是这条直线只对下标区间 $[i+1,r_i]$ 有效。</p>
+<h2>算法</h2>
+<p>使用 CDQ 分治处理下标区间。</p>
+<p>设当前分治区间为 $[l,r]$，中点为 $mid$：</p>
+<ol>
+<li>递归求出左半 $[l,mid]$ 内所有 $dp$；</li>
+<li>用左半所有已经可达的站点更新右半 $[mid+1,r]$；</li>
+<li>递归求右半。</li>
+</ol>
+<p>第 2 步中，左半站点 $i$ 的直线只对</p>
+<p>$$
+[mid+1,\min(r,r_i)]
+$$</p>
+<p>有效。把这些有效区间挂到一棵临时线段树上，每条线段被拆成 $O(\log n)$ 个完整节点。对每个临时线段树节点，建立一棵 Li Chao Tree，插入挂在该节点上的所有直线，并查询该节点覆盖的所有右半站点。</p>
+<p>这样每个跨分治区间的有效贡献都会在且只会在一个覆盖目标点的临时节点中被查询到。</p>
+<h2>正确性说明</h2>
+<p>CDQ 分治按下标处理转移。任意合法转移 $i\to j$ 满足 $i&lt;j$，必然存在唯一一层分治，使得 $i$ 位于该层左半，$j$ 位于该层右半。在这一层，$dp_i$ 已经由递归左半求出，然后该转移会被加入临时线段树中覆盖 $j$ 的节点，从而参与更新 $dp_j$。</p>
+<p>Li Chao Tree 对同一批直线在对应坐标集合上求最小值，因此能正确得到这些转移对每个 $j$ 的最小贡献。所有合法转移都被考虑，非法过期转移不会被加入目标区间，所以最终得到的 $dp_n$ 正确。</p>
+<h2>复杂度</h2>
+<p>每条跨区间直线在一层 CDQ 中被拆到 $O(\log n)$ 个临时节点。整体复杂度约为</p>
+<p>$$
+O(n\log^3 n),
+$$</p>
+<p>在本题范围内可以通过。空间复杂度为 $O(n\log n)$ 的临时存储峰值。</p>
+<h2>易错点</h2>
+<ul>
+<li>$c_1$ 不计入初始代价。</li>
+<li>只有 $j\le r_i$ 的转移有效。</li>
+<li>计算直线截距和答案时要使用 <code>long long</code>，乘法处建议使用 <code>__int128</code> 防止中间溢出。</li>
+</ul>
+</body>
+</html>

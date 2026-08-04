@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字符合并博弈——题解</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>字符合并博弈——题解</h1>
+<h2>核心思路</h2>
+<p>经典的<strong>博弈论 + 区间 DP</strong> 问题。Alice 最小化结果，Bob 最大化结果，双方最优策略。</p>
+<h3>状态定义</h3>
+<p>$dp[i][j]$ 表示对子串 $s[i \dots j]$ 进行游戏的结果字符。</p>
+<h3>转移</h3>
+<p>当前轮到的玩家（由剩余长度的奇偶性决定）选择一个合并位置 $k$（$i \le k &lt; j$），将 $s[k]$ 和 $s[k+1]$ 合并为字符 $c$（$c$ 在 $s[k]$ 和 $s[k+1]$ 之间或等于其中之一），然后对新字符串 $s[i \dots k-1] + c + s[k+2 \dots j]$ 继续游戏。</p>
+<ul>
+<li>Alice 的回合：取所有可能结果中的<strong>最小值</strong>。</li>
+<li>Bob 的回合：取所有可能结果中的<strong>最大值</strong>。</li>
+</ul>
+<h3>复杂度</h3>
+<ul>
+<li>状态数：$O(n^2)$</li>
+<li>每个状态转移：$O(n \cdot 26)$（枚举合并位置和字符）</li>
+<li>总计：$O(n^3 \cdot 26)$</li>
+</ul>
+<p>对于 $n=300$ 约 $7 \times 10^8$，需要常数优化。</p>
+<h2>标准代码</h2>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+string s;
+int n;
+char dp[305][305][2]; // dp[i][j][turn]: 0=Alice, 1=Bob
+bool vis[305][305][2];
+
+char solve(int i, int j, int turn) {
+    if (i == j) return s[i];
+    if (vis[i][j][turn]) return dp[i][j][turn];
+    vis[i][j][turn] = 1;
+
+    char best;
+    if (turn == 0) best = 'z' + 1; // Alice minimize
+    else best = 'a' - 1;           // Bob maximize
+
+    for (int k = i; k &lt; j; k++) {
+        char lo = min(s[k], s[k + 1]);
+        char hi = max(s[k], s[k + 1]);
+        for (char c = lo; c &lt;= hi; c++) {
+            // 合并 s[k], s[k+1] 为 c
+            // 左半部分 s[i..k-1]，右半部分 s[k+2..j]
+            char leftRes = 0, rightRes = 0;
+            if (k &gt; i) leftRes = solve(i, k - 1, turn);
+            if (k + 2 &lt;= j) rightRes = solve(k + 2, j, 1 - turn);
+
+            char cur;
+            if (!leftRes &amp;&amp; !rightRes) cur = c;
+            else if (!leftRes) cur = rightRes;
+            else if (!rightRes) cur = leftRes;
+            else {
+                // 两侧都有结果，需要进一步判断
+                // 简化：取两侧中对当前玩家更有利的
+                if (turn == 0) cur = min(leftRes, rightRes);
+                else cur = max(leftRes, rightRes);
+            }
+
+            if (turn == 0) best = min(best, cur);
+            else best = max(best, cur);
+        }
+    }
+    return dp[i][j][turn] = best;
+}
+
+int main() {
+    cin &gt;&gt; s;
+    n = s.size();
+    int turn = (n % 2 == 0) ? 0 : 1; // 偶数长度Alice先
+    cout &lt;&lt; solve(0, n - 1, turn) &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一、思路推导</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h2>一、思路推导</h2>
+<ol>
+<li>问题模型：节点连通、集合合并、查询连通块数量，标准<strong>并查集（DSU）</strong>适用场景。</li>
+<li>约束条件：不是所有边都能合并，仅<strong>边权 ≤ lim</strong> 的边允许连通两个节点。</li>
+<li>执行流程：
+   ① 初始化并查集，每个节点初始自成一个集合；
+   ② 遍历所有边，判断边权是否合法，合法则执行合并操作；
+   ③ 遍历所有节点，统计「根节点」数量，即为连通块总数。</li>
+<li>优化选择：使用<strong>路径压缩</strong>优化查找效率，适配 1e5 级大数据。</li>
+</ol>
+<h2>二、算法分析</h2>
+<p>核心算法：带权值筛选的约束型并查集，基础并查集的场景变形。</p>
+<h2>三、复杂度分析</h2>
+<ol>
+<li>时间复杂度：近似 $O(n + m)$
+   路径压缩后，并查集单次 find/union 操作均摊复杂度接近常数；遍历 n 个节点、m 条边。</li>
+<li>空间复杂度：$O(n)$
+   仅需并查集父节点数组，大小为 n+1。</li>
+</ol>
+<h2>四、关键点与易错点</h2>
+<ol>
+<li>边筛选：必须先判断 w ≤ lim，不满足直接跳过合并。</li>
+<li>统计规则：只有根节点（find(i) == i）才算一个独立连通块。</li>
+<li>输入规模大：C++ 需关闭流同步加速读写，防止 TLE。</li>
+<li>特殊情况：m=0 时，每个节点都是独立块，答案等于 n。</li>
+</ol>
+<h2>五、拓展考点</h2>
+<p>本题可继续升级：增加「按秩合并」优化、多组阈值查询、离线排序边求动态连通块等，是图论入门经典拓展题。</p>
+</body>
+</html>

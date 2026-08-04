@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题解：量子比特的相位干涉（QuantumInterfere）</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h2>题解：量子比特的相位干涉（QuantumInterfere）</h2>
+<h3>核心观察</h3>
+<p>定义差分数组 $d_i = |a_{i+1} - a_i|$（$i=1,\dots,n-1$）。</p>
+<p>查询操作 <code>2 l r</code> 需要计算 $\sum_{i=l}^{r-1} d_i$，即差分区间和。</p>
+<p>对于修改操作 <code>1 l r x</code>：
+- 区间内部的相邻差值不变（因为所有元素都加了相同的值）。
+- 只有端点处的差值可能改变：
+  - $d_{l-1} = |a_l - a_{l-1}|$ 变为 $|a_l+x - a_{l-1}|$（如果 $l &gt; 1$）
+  - $d_r = |a_{r+1} - a_r|$ 变为 $|a_{r+1} - (a_r+x)|$（如果 $r &lt; n$）</p>
+<p>因此，<strong>一次区间加最多影响 2 个位置的差分值</strong>。</p>
+<h3>算法</h3>
+<p>使用<strong>树状数组（Fenwick Tree）</strong>维护差分区间和。</p>
+<ul>
+<li>初始时 $O(n)$ 计算所有 $d_i$ 并构建树状数组。</li>
+<li>操作 <code>1 l r x</code>：更新受影响的 $d_{l-1}$ 和 $d_r$（如果存在），时间复杂度 $O(\log n)$。</li>
+<li>操作 <code>2 l r</code>：查询区间 $[l, r-1]$ 的和，时间复杂度 $O(\log n)$。</li>
+</ul>
+<p><strong>关键实现细节</strong>：
+- 维护原数组 $a$ 以计算新的差分值
+- 每次修改后重新计算受影响位置的 $d_i$ 并更新树状数组</p>
+<h3>复杂度</h3>
+<ul>
+<li>时间：$O(n + m\log n)$。</li>
+<li>空间：$O(n)$。</li>
+</ul>
+<h3>注意事项</h3>
+<ul>
+<li>需要维护原数组 $a$ 以计算新的差分值。</li>
+<li>注意边界情况：$l=1$ 时没有 $d_{l-1}$，$r=n$ 时没有 $d_r$。</li>
+</ul>
+</body>
+</html>

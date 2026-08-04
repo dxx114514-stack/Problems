@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>树上染色——题解</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>树上染色——题解</h1>
+<h2>核心思路</h2>
+<p>树形 DP + 状态压缩。由于颜色数 $c \le 10$，可以用位掩码表示子树中使用了哪些颜色。</p>
+<h3>状态定义</h3>
+<p>$dp[v][S]$ 表示以 $v$ 为根的子树中，使用颜色集合为 $S$ 的情况下，最多可以染色的节点数。其中 $S$ 的每个位表示对应颜色的连通分量是否完全包含在该子树中。</p>
+<h3>转移</h3>
+<p>对于节点 $v$，先处理所有子节点，再决定 $v$ 自身的颜色：</p>
+<ol>
+<li><strong>$v$ 不染色：</strong> 合并子节点的子树，保持连通性。</li>
+<li><strong>$v$ 染颜色 $k$：</strong> 对于每个子节点 $u$，可以选择：</li>
+<li>不染色</li>
+<li>染颜色 $k$（需满足 $|w_v - w_u| \ge d$，与 $v$ 连通）</li>
+<li>染其他颜色（开启新的连通分量）</li>
+</ol>
+<h3>复杂度</h3>
+<ul>
+<li>状态数：$O(n \cdot 2^c)$</li>
+<li>转移：$O(c)$</li>
+<li>总计：$O(n \cdot c \cdot 2^c)$</li>
+</ul>
+<h2>标准代码</h2>
+<pre><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+const int MAXN = 500005, MAXC = 10;
+
+int n, c, d, w[MAXN];
+vector&lt;int&gt; adj[MAXN];
+int dp[MAXN][1 &lt;&lt; MAXC], tmp[1 &lt;&lt; MAXC];
+
+void dfs(int v, int p) {
+    for (int S = 0; S &lt; (1 &lt;&lt; c); S++) dp[v][S] = 0;
+    for (int u : adj[v]) {
+        if (u == p) continue;
+        dfs(u, v);
+        for (int S = (1 &lt;&lt; c) - 1; S &gt;= 0; S--) {
+            int best = dp[v][S];
+            for (int T = S; T &gt; 0; T = (T - 1) &amp; S)
+                if (dp[u][T] &gt; 0)
+                    best = max(best, dp[v][S ^ T] + dp[u][T]);
+            dp[v][S] = best;
+        }
+    }
+    memcpy(tmp, dp[v], sizeof(dp[v]));
+    for (int k = 0; k &lt; c; k++) {
+        for (int S = 0; S &lt; (1 &lt;&lt; c); S++) {
+            if (S &amp; (1 &lt;&lt; k)) continue;
+            int val = dp[v][S] + 1;
+            int newS = S | (1 &lt;&lt; k);
+            tmp[newS] = max(tmp[newS], val);
+        }
+    }
+    memcpy(dp[v], tmp, sizeof(tmp));
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cin &gt;&gt; n &gt;&gt; c &gt;&gt; d;
+    for (int i = 1; i &lt;= n; i++) cin &gt;&gt; w[i];
+    for (int i = 0; i &lt; n - 1; i++) {
+        int u, v; cin &gt;&gt; u &gt;&gt; v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    dfs(1, 0);
+    int ans = 0;
+    for (int S = 0; S &lt; (1 &lt;&lt; c); S++)
+        ans = max(ans, dp[1][S]);
+    cout &lt;&lt; ans &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+</body>
+</html>

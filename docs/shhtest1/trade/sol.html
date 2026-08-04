@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题解：星际折跃的最长贸易路线</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h2>题解：星际折跃的最长贸易路线</h2>
+<h3>核心观察</h3>
+<p>对于固定的左端点 $i$，随着右端点右移，区间最大值单调不减、最小值单调不增，因此 $\max-\min$ 单调不减。这说明 $f(i)$ 可以通过二分答案得到，但带修改需要动态维护。</p>
+<p>关键技巧：<strong>线段树二分</strong>。</p>
+<p>在线段树的每个节点维护区间的最大值 <code>mx</code> 和最小值 <code>mn</code>。</p>
+<p>查询 $f(i)$ 时，需要找到最远的 $r$ 使得 $[i,r]$ 的 $\max-\min\le k$。采用"倍增"式线段树遍历：</p>
+<p>从根节点开始，维护当前已选区间的 <code>curMx</code> 和 <code>curMn</code>。优先尝试进入左子树（如果左子树与当前已选区间的合并结果满足条件），否则尝试右子树。实际上更标准的写法是：</p>
+<p>定义递归函数 <code>dfs(u,l,r)</code>，表示当前线段树节点为 $[l,r]$，且已知从 $i$ 开始到当前已覆盖区间的 <code>curMx, curMn</code>。如果该节点完全在查询范围内，尝试将整个节点合并进当前区间：若 <code>max(curMx, node.mx) - min(curMn, node.mn) &amp;lt;= k</code>，则整个节点合法，更新 <code>curMx, curMn</code>，并记录当前最右端点。否则如果该节点是叶子，则停止；否则递归进入子节点。</p>
+<p>由于线段树节点按区间顺序排列，我们可以从左到右依次尝试合并，遇到不合法的节点就进入其子节点继续尝试，直到找到最远的合法位置。</p>
+<h3>算法</h3>
+<ul>
+<li>建立线段树，维护 <code>mx</code> 和 <code>mn</code>。</li>
+<li>单点修改：更新叶子，$O(\log n)$。</li>
+<li>查询 $f(i)$：从 $i$ 开始，在线段树上二分查找最远的合法右端点，$O(\log n)$。</li>
+</ul>
+<h3>复杂度</h3>
+<ul>
+<li>时间：$O(m\log n)$</li>
+<li>空间：$O(n)$</li>
+</ul>
+</body>
+</html>

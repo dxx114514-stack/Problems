@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潮汐门题解</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.7;max-width:800px;margin:0 auto;padding:20px;color:#333;}
+.back-btn{display:inline-block;margin-bottom:20px;padding:6px 12px;background:#f0f0f0;border-radius:4px;text-decoration:none;color:#333;font-size:14px;transition:0.2s;}
+.back-btn:hover{background:#e0e0e0;}
+h1,h2,h3,h4,h5,h6{margin-top:1.5em;margin-bottom:0.5em;}
+pre{background:#f6f8fa;padding:16px;border-radius:6px;overflow-x:auto;}
+code{background:#f0f0f0;padding:2px 6px;border-radius:3px;font-size:0.9em;}
+pre code{background:none;padding:0;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;}
+th{background:#f6f8fa;}
+blockquote{border-left:4px solid #ddd;margin:16px 0;padding:8px 16px;color:#666;}
+img{max-width:100%;}
+a{color:#0366d6;}
+hr{border:none;border-top:1px solid #eee;margin:24px 0;}
+details{margin:12px 0;}
+details summary{cursor:pointer;user-select:none;}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:4px 0;}
+</style>
+</head>
+<body>
+<a href="javascript:history.back()" class="back-btn">← 返回</a>
+<h1>潮汐门题解</h1>
+<h2>关键观察</h2>
+<p>到达同一个点时，真正影响后续选择的是当前时刻对 $P$ 取模的结果。<br />
+因此可以把状态扩成 $(u, r)$，表示到达点 $u$ 且当前时刻模 $P$ 为 $r$ 的最早时间。</p>
+<p>从状态 $(u,r)$ 走边 $(u,v,w,l,r')$ 时，只需要计算最少等待多久，使新的出发余数落在 $[l,r']$ 内：</p>
+<ul>
+<li>若当前余数已经在区间内，等待 $0$；</li>
+<li>若当前余数小于 $l$，等待 $l-r$；</li>
+<li>否则等待到下一个周期的 $l$。</li>
+</ul>
+<p>边权都是非负的，所以在扩展状态图上跑 Dijkstra 即可。</p>
+<h2>算法</h2>
+<p>令 <code>dist[u][rem]</code> 为到达状态 $(u,rem)$ 的最早时间，初始 <code>dist[1][0]=0</code>。</p>
+<p>每次从优先队列中取出当前最小时刻 <code>t</code> 的状态 <code>(u, rem)</code>，枚举所有从 <code>u</code> 出发的边：</p>
+<ol>
+<li>计算需要等待的时间 <code>wait</code>；</li>
+<li>新时刻为 <code>nt=t+wait+w</code>；</li>
+<li>新余数为 <code>nt % P</code>；</li>
+<li>若能更新 <code>dist[v][nt%P]</code>，则加入优先队列。</li>
+</ol>
+<p>答案为 $\min_{0\le r&lt;P} dist[n][r]$。</p>
+<h2>正确性说明</h2>
+<p>扩展后的每个状态完整记录了当前位置和之后所有潮汐限制所需的时间余数。<br />
+对任意真实可行行程，它在扩展图中对应一条状态路径；每次等待和通过边的耗时与真实行程一致。反过来，扩展图中的每条转移都选择了满足开放区间的最早可行出发时刻，因此也对应真实可行行程。</p>
+<p>扩展图中所有转移代价非负，Dijkstra 能求出从 $(1,0)$ 到所有状态的最短时间，所以取终点 $n$ 的所有余数状态最小值即为最早到达时刻。</p>
+<h2>复杂度</h2>
+<p>状态数为 $nP$。每个状态会枚举该点所有出边一次，总转移数为 $mP$。</p>
+<p>时间复杂度为 $O((nP+mP)\log(nP))$，空间复杂度为 $O(nP+m)$。</p>
+<h2>易错点</h2>
+<ul>
+<li>区间 $[l_i,r_i]$ 是闭区间。</li>
+<li>当前余数大于 $r_i$ 时，需要等到下一个周期的 $l_i$。</li>
+<li>答案不是 <code>dist[n][0]</code>，而是终点所有余数状态的最小值。</li>
+</ul>
+</body>
+</html>
